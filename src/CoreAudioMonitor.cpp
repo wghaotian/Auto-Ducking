@@ -20,14 +20,14 @@
 #include <unordered_map>
 #include <utility>
 
-namespace auto_mixer {
+namespace auto_ducking {
 namespace {
 
 using Microsoft::WRL::ComPtr;
 
 // Distinguishes this utility's changes from external mixer changes if volume
 // notifications are added later.
-constexpr GUID kAutoMixerVolumeContext = {
+constexpr GUID kAutoDuckingVolumeContext = {
     0x89be2a79, 0x6aa8, 0x4c23, {0xa4, 0x39, 0x33, 0xb6, 0x6d, 0x4c, 0xcd, 0x4e}};
 
 std::wstring HResultText(const HRESULT result) {
@@ -415,7 +415,7 @@ public:
                 });
             if (session != device.sessions.end() && session->volume) {
                 return SUCCEEDED(session->volume->SetMasterVolume(
-                    boundedVolume, &kAutoMixerVolumeContext));
+                    boundedVolume, &kAutoDuckingVolumeContext));
             }
         }
         return false;
@@ -461,4 +461,4 @@ const wchar_t* ToString(const SessionState state) noexcept {
     }
 }
 
-} // namespace auto_mixer
+} // namespace auto_ducking

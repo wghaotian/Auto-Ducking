@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <optional>
 
-namespace auto_mixer {
+namespace auto_ducking {
 
 struct ActivityDetectorConfig {
     float activationThreshold = 0.02F;
@@ -29,5 +29,4 @@ private:
     std::optional<std::uint64_t> belowSince_;
 };
 
-} // namespace auto_mixer
-
+} // namespace auto_ducking

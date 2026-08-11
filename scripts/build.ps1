@@ -42,6 +42,6 @@ if ($LASTEXITCODE -ne 0) { throw 'Build failed.' }
 & $cmake --build $buildDirectory --config $Configuration --target RUN_TESTS
 if ($LASTEXITCODE -ne 0) { throw 'Tests failed.' }
 
-Write-Host "Built CLI: $buildDirectory\$Configuration\auto-mixer-diagnostics.exe"
-Write-Host "Built meter: $buildDirectory\$Configuration\auto-mixer-process-meter.exe"
-Write-Host "Built UI:  $buildDirectory\$Configuration\auto-mixer-ui.exe"
+Write-Host "Built CLI: $buildDirectory\$Configuration\auto-ducking-diagnostics.exe"
+Write-Host "Built meter: $buildDirectory\$Configuration\auto-ducking-process-meter.exe"
+Write-Host "Built UI:  $buildDirectory\$Configuration\auto-ducking-ui.exe"

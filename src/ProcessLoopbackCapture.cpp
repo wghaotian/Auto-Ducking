@@ -36,7 +36,7 @@ struct AUDIOCLIENT_ACTIVATION_PARAMS {
 };
 #endif
 
-namespace auto_mixer {
+namespace auto_ducking {
 namespace {
 
 using Microsoft::WRL::ComPtr;
@@ -327,5 +327,4 @@ void ProcessLoopbackCapture::Run() {
     finish();
 }
 
-} // namespace auto_mixer
-
+} // namespace auto_ducking

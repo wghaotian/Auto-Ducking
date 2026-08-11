@@ -38,8 +38,8 @@ struct Options {
 
 void PrintHelp() {
     std::wcout
-        << L"Auto Mixer - Core Audio session diagnostics\n\n"
-        << L"Usage: auto-mixer-diagnostics [options]\n\n"
+        << L"Auto Ducking - Core Audio session diagnostics\n\n"
+        << L"Usage: auto-ducking-diagnostics [options]\n\n"
         << L"Options:\n"
         << L"  --once                  Print one snapshot and exit\n"
         << L"  --default-device-only   Inspect only the default multimedia output\n"
@@ -94,7 +94,7 @@ bool EnableVirtualTerminal() {
     return SetConsoleMode(output, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING) != FALSE;
 }
 
-std::wstring DeviceRoles(const auto_mixer::DeviceSnapshot& device) {
+std::wstring DeviceRoles(const auto_ducking::DeviceSnapshot& device) {
     std::wstring result;
     if (device.defaultConsole) {
         result += L"console,";
@@ -111,12 +111,12 @@ std::wstring DeviceRoles(const auto_mixer::DeviceSnapshot& device) {
     return result.empty() ? L"non-default" : result;
 }
 
-void Render(const auto_mixer::MonitorSnapshot& snapshot, const bool clearScreen) {
+void Render(const auto_ducking::MonitorSnapshot& snapshot, const bool clearScreen) {
     if (clearScreen) {
         std::wcout << L"\x1b[2J\x1b[H";
     }
 
-    std::wcout << L"Auto Mixer - output session diagnostics"
+    std::wcout << L"Auto Ducking - output session diagnostics"
                << L"  (Ctrl+C to exit)\n";
     std::wcout << L"Devices: " << snapshot.devices.size()
                << L"  Updated: " << std::flush;
@@ -146,15 +146,15 @@ void Render(const auto_mixer::MonitorSnapshot& snapshot, const bool clearScreen)
                 ? session.processName + L" (" + session.displayName + L")"
                 : session.processName;
             std::wcout << L"  " << std::right << std::setw(7) << session.processId << L"  "
-                       << std::left << std::setw(8) << auto_mixer::ToString(session.state) << L"  "
+                       << std::left << std::setw(8) << auto_ducking::ToString(session.state) << L"  "
                        << std::right << std::fixed << std::setprecision(0)
                        << std::setw(3) << session.volume * 100.0F << L"%  "
                        << std::left << std::setw(4) << (session.muted ? L"yes" : L"no") << L"  "
                        << std::right << std::setprecision(3) << std::setw(5) << session.peak << L"  "
-                       << auto_mixer::FormatPeakBar(session.peak, 20) << L"  "
-                       << auto_mixer::Truncate(label, 48) << L"\n";
+                       << auto_ducking::FormatPeakBar(session.peak, 20) << L"  "
+                       << auto_ducking::Truncate(label, 48) << L"\n";
             std::wcout << L"           instance: "
-                       << auto_mixer::Truncate(session.instanceId, 100) << L"\n";
+                       << auto_ducking::Truncate(session.instanceId, 100) << L"\n";
         }
         std::wcout << L"\n";
     }
@@ -176,7 +176,7 @@ int wmain(const int argc, wchar_t* argv[]) {
     const bool interactiveConsole = EnableVirtualTerminal();
 
     try {
-        auto_mixer::CoreAudioMonitor monitor(options.defaultDeviceOnly);
+        auto_ducking::CoreAudioMonitor monitor(options.defaultDeviceOnly);
         monitor.RefreshTopology();
 
         auto nextTopologyRefresh = std::chrono::steady_clock::now() +

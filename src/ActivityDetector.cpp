@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-namespace auto_mixer {
+namespace auto_ducking {
 
 ActivityDetector::ActivityDetector(ActivityDetectorConfig config) {
     SetConfig(config);
@@ -59,5 +59,4 @@ bool ActivityDetector::IsActive() const noexcept {
     return active_;
 }
 
-} // namespace auto_mixer
-
+} // namespace auto_ducking

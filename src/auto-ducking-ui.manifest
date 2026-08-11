@@ -3,9 +3,9 @@
   <assemblyIdentity
       version="1.0.0.0"
       processorArchitecture="*"
-      name="AutoMixer.Desktop"
+      name="AutoDucking.Desktop"
       type="win32" />
-  <description>Auto Mixer audio activity and parameter preview</description>
+  <description>Auto Ducking audio activity and volume control</description>
   <dependency>
     <dependentAssembly>
       <assemblyIdentity

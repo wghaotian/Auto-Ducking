@@ -1,0 +1,98 @@
+name: SignPath release (configure after approval)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version without the v prefix
+        required: true
+        default: 0.2.0
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  build-and-sign:
+    runs-on: windows-latest
+    # Keep this workflow manual until SignPath has approved the project and the
+    # required secrets plus artifact configurations have been created.
+    steps:
+      - name: Check out the reviewed source
+        uses: actions/checkout@v4
+
+      - name: Build and test
+        shell: pwsh
+        run: .\scripts\build.ps1
+
+      - name: Upload the unsigned UI executable for SignPath
+        id: upload-ui
+        uses: actions/upload-artifact@v7
+        with:
+          name: auto-ducking-ui-unsigned
+          path: build\Release\auto-ducking-ui.exe
+          archive: false
+
+      - name: Sign the UI executable with SignPath
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ secrets.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ secrets.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ secrets.SIGNPATH_RELEASE_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ secrets.SIGNPATH_UI_ARTIFACT_CONFIGURATION }}
+          github-artifact-id: ${{ steps.upload-ui.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed-ui
+
+      - name: Replace the UI executable with the signed artifact
+        shell: pwsh
+        run: Copy-Item .\signed-ui\auto-ducking-ui.exe .\build\Release\auto-ducking-ui.exe -Force
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: winget install --exact --id JRSoftware.InnoSetup --silent --accept-package-agreements --accept-source-agreements
+
+      - name: Build the installer around the signed UI executable
+        shell: pwsh
+        run: |
+          $iscc = 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+          & $iscc "/DAppVersion=${{ inputs.version }}" .\installer\AutoDucking.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Inno Setup compilation failed.' }
+
+      - name: Upload the unsigned installer for SignPath
+        id: upload-installer
+        uses: actions/upload-artifact@v7
+        with:
+          name: auto-ducking-installer-unsigned
+          path: dist\Auto-Ducking-Setup-v${{ inputs.version }}-x64.exe
+          archive: false
+
+      - name: Sign the installer with SignPath
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ secrets.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ secrets.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ secrets.SIGNPATH_RELEASE_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ secrets.SIGNPATH_INSTALLER_ARTIFACT_CONFIGURATION }}
+          github-artifact-id: ${{ steps.upload-installer.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed-installer
+
+      - name: Create the release checksum
+        shell: pwsh
+        run: |
+          $installer = '.\signed-installer\Auto-Ducking-Setup-v${{ inputs.version }}-x64.exe'
+          $checksum = Get-FileHash -Algorithm SHA256 -LiteralPath $installer
+          "{0} *{1}" -f $checksum.Hash, (Split-Path -Leaf $checksum.Path) |
+            Set-Content -Encoding ascii '.\signed-installer\SHA256SUMS.txt'
+
+      - name: Upload signed release candidates
+        uses: actions/upload-artifact@v7
+        with:
+          name: Auto-Ducking-v${{ inputs.version }}-signed-release-candidates
+          path: |
+            signed-installer\Auto-Ducking-Setup-v${{ inputs.version }}-x64.exe
+            signed-installer\SHA256SUMS.txt

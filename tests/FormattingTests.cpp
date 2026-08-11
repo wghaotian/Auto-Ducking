@@ -21,9 +21,9 @@ int RunDuckingControllerTests();
 int RunProcessLoopbackCaptureTests();
 
 int main() {
-    using auto_mixer::BaseName;
-    using auto_mixer::FormatPeakBar;
-    using auto_mixer::Truncate;
+    using auto_ducking::BaseName;
+    using auto_ducking::FormatPeakBar;
+    using auto_ducking::Truncate;
 
     Check(BaseName(LR"(C:\Program Files\Spotify\Spotify.exe)") == L"Spotify.exe",
           "BaseName handles Windows paths");

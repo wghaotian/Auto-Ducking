@@ -5,7 +5,7 @@
 #include <deque>
 #include <string>
 
-namespace auto_mixer {
+namespace auto_ducking {
 
 class WaveformControl final {
 public:
@@ -31,4 +31,4 @@ private:
     std::deque<float> history_;
 };
 
-} // namespace auto_mixer
+} // namespace auto_ducking

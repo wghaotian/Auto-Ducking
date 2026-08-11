@@ -1,15 +1,21 @@
-# Auto Mixer
+# Auto Ducking
 
-A lightweight Windows 11 audio-ducking utility. When a selected communication app produces audio, Auto Mixer smoothly lowers selected music apps and restores their original session volumes when the communication ends.
+A lightweight Windows 11 audio-ducking utility. When a selected communication app produces audio, Auto Ducking smoothly lowers selected music apps and restores their original session volumes when the communication ends.
 
-轻量级 Windows 11 自动音量闪避工具。当选定的通讯软件产生声音时，Auto Mixer 会平滑降低音乐软件的音量，并在通讯结束后恢复各个音频会话原有的音量。
+轻量级 Windows 11 自动音量闪避工具。当选定的通讯软件产生声音时，Auto Ducking 会平滑降低音乐软件的音量，并在通讯结束后恢复各个音频会话原有的音量。
 
 [中文说明](#中文说明) · [English](#english)
 
 > [!IMPORTANT]
-> Auto Mixer currently stores settings in memory only. Normal shutdown restores controlled volumes, but forced termination, power loss, or an operating-system crash cannot run the restoration code. Persistent crash recovery has not yet been implemented.
+> Auto Ducking currently stores settings in memory only. Normal shutdown restores controlled volumes, but forced termination, power loss, or an operating-system crash cannot run the restoration code. Persistent crash recovery has not yet been implemented.
 >
-> Auto Mixer 目前不会持久化设置。正常关闭程序时会恢复受控音量，但强制结束进程、断电或系统崩溃时无法执行恢复代码；持久化崩溃恢复功能尚未实现。
+> Auto Ducking 目前不会持久化设置。正常关闭程序时会恢复受控音量，但强制结束进程、断电或系统崩溃时无法执行恢复代码；持久化崩溃恢复功能尚未实现。
+
+## Code signing policy / 代码签名政策
+
+Auto Ducking is applying for the SignPath Foundation program. Once approved: **Free code signing provided by SignPath.io, certificate by SignPath Foundation.** Until approval, no release artifact is represented as signed by SignPath.
+
+签名政策、维护者职责与隐私承诺详见 [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md)。申请与首版发布步骤详见 [docs/signpath-application.md](docs/signpath-application.md)。
 
 ## 中文说明
 
@@ -39,14 +45,14 @@ A lightweight Windows 11 audio-ducking utility. When a selected communication ap
 如果仓库的 **Releases** 页面提供了预编译版本：
 
 1. 下载并解压最新的 x64 压缩包。
-2. 运行 `auto-mixer-ui.exe`。
+2. 运行 `auto-ducking-ui.exe`。
 
 如果没有预编译版本，请按照[从源码构建](#从源码构建)进行操作。
 
 ### 快速上手
 
 1. 启动需要使用的通讯和音乐软件，并让它们至少播放过一次声音，以便 Windows 创建音频会话。
-2. 启动 `auto-mixer-ui.exe`。
+2. 启动 `auto-ducking-ui.exe`。
 3. 在顶部选择这些应用实际使用的输出设备。
 4. 在“通讯软件”列表中勾选 Discord、Teams、Zoom 等声音来源。
 5. 在“音乐软件”列表中勾选 Spotify、Chrome、VLC 等需要降低音量的应用。
@@ -67,7 +73,7 @@ A lightweight Windows 11 audio-ducking utility. When a selected communication ap
 | Attack 时间 | `200 ms` | 从原始音量平滑降低到目标音量所需的时间；`0` 表示立即变化。 |
 | Release 时间 | `800 ms` | 从 Duck 音量平滑恢复到基准音量所需的时间；`0` 表示立即恢复。 |
 
-推荐先使用默认值。如果 Discord 通知音也会触发 Ducking，可以适当提高激活阈值或延长激活持续时间。Auto Mixer 检测的是通讯软件的输出声音，并不能判断声音是否一定是人声。
+推荐先使用默认值。如果 Discord 通知音也会触发 Ducking，可以适当提高激活阈值或延长激活持续时间。Auto Ducking 检测的是通讯软件的输出声音，并不能判断声音是否一定是人声。
 
 ### 从源码构建
 
@@ -86,7 +92,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1
 脚本会配置 Release x64 构建、编译所有程序并运行单元测试。生成的 UI 位于：
 
 ```text
-build\Release\auto-mixer-ui.exe
+build\Release\auto-ducking-ui.exe
 ```
 
 也可以在 **Developer PowerShell for Visual Studio** 中手动构建：
@@ -97,31 +103,33 @@ cmake --build build --config Release
 ctest --test-dir build -C Release --output-on-failure
 ```
 
+发布维护者可参阅 [installer/README.md](installer/README.md) 制作并签名 Inno Setup 安装包。
+
 ### 诊断工具
 
 生成一次所有活动输出设备和音频会话的快照：
 
 ```powershell
-.\build\Release\auto-mixer-diagnostics.exe --once
+.\build\Release\auto-ducking-diagnostics.exe --once
 ```
 
 持续监视音频会话：
 
 ```powershell
-.\build\Release\auto-mixer-diagnostics.exe
+.\build\Release\auto-ducking-diagnostics.exe
 ```
 
 检查指定进程 ID 的隔离峰值：
 
 ```powershell
-.\build\Release\auto-mixer-process-meter.exe 1234 5678
+.\build\Release\auto-ducking-process-meter.exe 1234 5678
 ```
 
 诊断程序中的 `PEAK*` 是旧式会话控制诊断值，可能与整个输出设备的波形一致。桌面 UI 不使用该值，而是使用进程隔离的 Loopback 峰值。
 
 ### 隐私与安全
 
-- Auto Mixer 只读取所选进程的音频输出缓冲区以计算绝对峰值。
+- Auto Ducking 只读取所选进程的音频输出缓冲区以计算绝对峰值。
 - 音频缓冲区计算完成后会立即释放；程序不保存或解码音频内容。
 - 程序不会访问麦克风，也不会把数据发送到网络。
 - 音量写入通过 Windows 应用音频会话完成，不修改输出设备主音量。
@@ -168,14 +176,14 @@ Process loopback requires Windows 10 build 20348 or later, so Windows 11 is the 
 If a prebuilt package is available on the repository's **Releases** page:
 
 1. Download and extract the latest x64 archive.
-2. Run `auto-mixer-ui.exe`.
+2. Run `auto-ducking-ui.exe`.
 
 Otherwise, follow [Build from source](#build-from-source).
 
 ### Quick start
 
 1. Start the communication and music applications you intend to use. Let each application play audio at least once so Windows creates its audio session.
-2. Launch `auto-mixer-ui.exe`.
+2. Launch `auto-ducking-ui.exe`.
 3. Select the output device to which those applications are routed.
 4. Under the communication list, check sources such as Discord, Teams, or Zoom.
 5. Under the music list, check targets such as Spotify, Chrome, or VLC.
@@ -198,7 +206,7 @@ The current UI uses Chinese labels; this table provides their English meaning.
 | Attack 时间 | Attack time | `200 ms` | Time used to ramp from the baseline to the ducked volume. `0` changes it immediately. |
 | Release 时间 | Release time | `800 ms` | Time used to ramp back to the baseline. `0` restores it immediately. |
 
-Start with the defaults. If Discord notifications trigger ducking, try increasing the activation threshold or activation dwell. Auto Mixer detects output from the communication process; it cannot determine whether that output is actually speech.
+Start with the defaults. If Discord notifications trigger ducking, try increasing the activation threshold or activation dwell. Auto Ducking detects output from the communication process; it cannot determine whether that output is actually speech.
 
 ### Build from source
 
@@ -217,7 +225,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1
 The script configures an x64 Release build, compiles every target, and runs the unit tests. The resulting UI executable is:
 
 ```text
-build\Release\auto-mixer-ui.exe
+build\Release\auto-ducking-ui.exe
 ```
 
 Alternatively, build manually from a **Developer PowerShell for Visual Studio**:
@@ -228,31 +236,33 @@ cmake --build build --config Release
 ctest --test-dir build -C Release --output-on-failure
 ```
 
+Release maintainers can follow [installer/README.md](installer/README.md) to build and sign the Inno Setup installer.
+
 ### Diagnostic tools
 
 Capture one snapshot of all active output devices and sessions:
 
 ```powershell
-.\build\Release\auto-mixer-diagnostics.exe --once
+.\build\Release\auto-ducking-diagnostics.exe --once
 ```
 
 Continuously monitor audio sessions:
 
 ```powershell
-.\build\Release\auto-mixer-diagnostics.exe
+.\build\Release\auto-ducking-diagnostics.exe
 ```
 
 Inspect isolated peaks for specific process IDs:
 
 ```powershell
-.\build\Release\auto-mixer-process-meter.exe 1234 5678
+.\build\Release\auto-ducking-process-meter.exe 1234 5678
 ```
 
 The diagnostic CLI's `PEAK*` value is a legacy session-control diagnostic and can mirror the complete endpoint mix. The desktop UI does not use it; it uses process-isolated loopback peaks.
 
 ### Privacy and safety
 
-- Auto Mixer reads output buffers for selected processes only to calculate an absolute peak.
+- Auto Ducking reads output buffers for selected processes only to calculate an absolute peak.
 - Each buffer is released immediately after measurement; audio content is not saved or decoded.
 - The application does not access the microphone or transmit data over the network.
 - Volume writes target Windows application audio sessions and do not change the output endpoint's master volume.

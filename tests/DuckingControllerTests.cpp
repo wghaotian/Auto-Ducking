@@ -16,17 +16,17 @@ int RunDuckingControllerTests() {
         }
     };
 
-    check(std::fabs(auto_mixer::InterpolateAttenuation(1.0F, 0.25F, 100, 200) - 0.625F) < 0.0001F,
+    check(std::fabs(auto_ducking::InterpolateAttenuation(1.0F, 0.25F, 100, 200) - 0.625F) < 0.0001F,
           "attack interpolation reaches halfway");
-    check(auto_mixer::InterpolateAttenuation(0.25F, 1.0F, 800, 800) == 1.0F,
+    check(auto_ducking::InterpolateAttenuation(0.25F, 1.0F, 800, 800) == 1.0F,
           "release interpolation reaches target");
 
-    auto_mixer::SessionSnapshot music;
+    auto_ducking::SessionSnapshot music;
     music.key = L"device|spotify-session";
     music.processName = L"Spotify.exe";
     music.volume = 0.8F;
-    music.state = auto_mixer::SessionState::Active;
-    std::vector<auto_mixer::SessionSnapshot> sessions{music};
+    music.state = auto_ducking::SessionState::Active;
+    std::vector<auto_ducking::SessionSnapshot> sessions{music};
     const std::set<std::wstring> duckApps{L"Spotify.exe"};
     std::map<std::wstring, float> writes;
     const auto writer = [&](const std::wstring& key, const float value) {
@@ -34,8 +34,8 @@ int RunDuckingControllerTests() {
         return true;
     };
 
-    auto_mixer::DuckingController controller;
-    const auto_mixer::DuckingConfig config{0.25F, 200, 800, 0.015F, 750};
+    auto_ducking::DuckingController controller;
+    const auto_ducking::DuckingConfig config{0.25F, 200, 800, 0.015F, 750};
     controller.Update(sessions, duckApps, false, config, 0, writer);
     check(writes.empty(), "inactive controller does not touch volume");
 
@@ -61,7 +61,7 @@ int RunDuckingControllerTests() {
           "release restores original session volume");
     check(!controller.IsControlling(), "restored session is released from control");
 
-    auto_mixer::DuckingController rebaseController;
+    auto_ducking::DuckingController rebaseController;
     writes.clear();
     sessions[0].volume = 0.8F;
     rebaseController.Update(sessions, duckApps, false, config, 0, writer);

@@ -24,7 +24,7 @@
 
 namespace {
 
-constexpr wchar_t kWindowClass[] = L"AutoMixerMainWindow";
+constexpr wchar_t kWindowClass[] = L"AutoDuckingMainWindow";
 constexpr int kDeviceComboId = 100;
 constexpr int kVoiceListId = 101;
 constexpr int kMusicListId = 102;
@@ -77,7 +77,7 @@ std::wstring Lowercase(std::wstring value) {
     return value;
 }
 
-std::wstring DeviceLabel(const auto_mixer::DeviceSnapshot& device) {
+std::wstring DeviceLabel(const auto_ducking::DeviceSnapshot& device) {
     std::wstring roles;
     if (device.defaultMultimedia) {
         roles += L"默认媒体/";
@@ -144,7 +144,7 @@ public:
         window_ = CreateWindowExW(
             0,
             kWindowClass,
-            L"Auto Mixer — 自动音量 Ducking",
+            L"Auto Ducking — 自动音量闪避",
             WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
             CW_USEDEFAULT,
             CW_USEDEFAULT,
@@ -417,7 +417,7 @@ private:
         InvalidateRect(deviceCombo_, nullptr, TRUE);
     }
 
-    const auto_mixer::DeviceSnapshot* SelectedDevice() const {
+    const auto_ducking::DeviceSnapshot* SelectedDevice() const {
         const auto match = std::find_if(
             snapshot_.devices.begin(), snapshot_.devices.end(), [&](const auto& device) {
                 return device.id == selectedDeviceId_;
@@ -552,7 +552,7 @@ private:
         for (const std::uint32_t processId : desiredProcesses) {
             if (processCaptures_.count(processId) == 0) {
                 processCaptures_.emplace(
-                    processId, std::make_unique<auto_mixer::ProcessLoopbackCapture>(processId));
+                    processId, std::make_unique<auto_ducking::ProcessLoopbackCapture>(processId));
             }
         }
     }
@@ -606,7 +606,7 @@ private:
 
         const auto* selectedDevice = SelectedDevice();
         if (selectedDevice != nullptr) {
-            auto_mixer::DuckingConfig duckingConfig;
+            auto_ducking::DuckingConfig duckingConfig;
             duckingConfig.duckFactor = static_cast<float>(ParameterPosition(4)) / 1000.0F;
             duckingConfig.attackMs = static_cast<std::uint32_t>(ParameterPosition(5));
             duckingConfig.releaseMs = static_cast<std::uint32_t>(ParameterPosition(6));
@@ -750,7 +750,7 @@ private:
     }
 
     void UpdateDetectorConfig() {
-        auto_mixer::ActivityDetectorConfig config;
+        auto_ducking::ActivityDetectorConfig config;
         config.activationThreshold = static_cast<float>(ParameterPosition(0)) / 1000.0F;
         config.releaseThreshold = static_cast<float>(ParameterPosition(1)) / 1000.0F;
         config.activationMs = static_cast<std::uint32_t>(ParameterPosition(2));
@@ -813,14 +813,14 @@ private:
     HWND voiceList_ = nullptr;
     HWND musicList_ = nullptr;
     HWND status_ = nullptr;
-    auto_mixer::WaveformControl voiceWave_;
-    auto_mixer::WaveformControl musicWave_;
+    auto_ducking::WaveformControl voiceWave_;
+    auto_ducking::WaveformControl musicWave_;
     std::vector<ParameterControl> parameters_;
 
-    auto_mixer::CoreAudioMonitor monitor_;
-    auto_mixer::MonitorSnapshot snapshot_;
-    auto_mixer::ActivityDetector detector_;
-    auto_mixer::DuckingController duckingController_;
+    auto_ducking::CoreAudioMonitor monitor_;
+    auto_ducking::MonitorSnapshot snapshot_;
+    auto_ducking::ActivityDetector detector_;
+    auto_ducking::DuckingController duckingController_;
     std::vector<std::wstring> deviceIds_;
     std::vector<std::wstring> deviceLabels_;
     std::wstring selectedDeviceId_;
@@ -828,7 +828,7 @@ private:
     std::set<std::wstring> voiceApps_;
     std::set<std::wstring> musicApps_;
     std::vector<std::pair<std::wstring, int>> appSignature_;
-    std::map<std::uint32_t, std::unique_ptr<auto_mixer::ProcessLoopbackCapture>> processCaptures_;
+    std::map<std::uint32_t, std::unique_ptr<auto_ducking::ProcessLoopbackCapture>> processCaptures_;
     std::uint64_t lastTopologyRefreshMs_ = 0;
     bool suppressListNotifications_ = false;
     bool suppressParameterNotifications_ = false;
@@ -846,20 +846,20 @@ int WINAPI wWinMain(
     commonControls.dwICC = ICC_LISTVIEW_CLASSES | ICC_BAR_CLASSES | ICC_STANDARD_CLASSES;
     InitCommonControlsEx(&commonControls);
 
-    if (!auto_mixer::WaveformControl::Register(instance)) {
-        MessageBoxW(nullptr, L"无法注册波形控件。", L"Auto Mixer", MB_OK | MB_ICONERROR);
+    if (!auto_ducking::WaveformControl::Register(instance)) {
+        MessageBoxW(nullptr, L"无法注册波形控件。", L"Auto Ducking", MB_OK | MB_ICONERROR);
         return 1;
     }
 
     try {
         MainWindow application;
         if (!application.Create(instance)) {
-            MessageBoxW(nullptr, L"无法创建主窗口。", L"Auto Mixer", MB_OK | MB_ICONERROR);
+            MessageBoxW(nullptr, L"无法创建主窗口。", L"Auto Ducking", MB_OK | MB_ICONERROR);
             return 1;
         }
         return application.Run(showCommand);
     } catch (const std::exception& error) {
-        MessageBoxA(nullptr, error.what(), "Auto Mixer", MB_OK | MB_ICONERROR);
+        MessageBoxA(nullptr, error.what(), "Auto Ducking", MB_OK | MB_ICONERROR);
         return 1;
     }
 }

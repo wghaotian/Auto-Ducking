@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace auto_mixer {
+namespace auto_ducking {
 namespace {
 
 constexpr float kMinimumRebaseAttenuation = 0.05F;
@@ -159,5 +159,4 @@ std::size_t DuckingController::ControlledSessionCount() const noexcept {
     return sessions_.size();
 }
 
-} // namespace auto_mixer
-
+} // namespace auto_ducking

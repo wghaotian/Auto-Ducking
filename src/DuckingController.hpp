@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace auto_mixer {
+namespace auto_ducking {
 
 struct DuckingConfig {
     float duckFactor = 0.25F;
@@ -63,5 +63,4 @@ private:
     bool rampInitialized_ = false;
 };
 
-} // namespace auto_mixer
-
+} // namespace auto_ducking

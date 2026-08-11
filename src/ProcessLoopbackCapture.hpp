@@ -10,7 +10,7 @@
 #include <string>
 #include <thread>
 
-namespace auto_mixer {
+namespace auto_ducking {
 
 float CalculatePcm16Peak(const std::int16_t* samples, std::size_t sampleCount) noexcept;
 
@@ -42,5 +42,4 @@ private:
     std::wstring error_;
 };
 
-} // namespace auto_mixer
-
+} // namespace auto_ducking

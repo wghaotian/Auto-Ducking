@@ -11,7 +11,7 @@ int RunActivityDetectorTests() {
         }
     };
 
-    auto_mixer::ActivityDetector detector({0.02F, 0.01F, 100, 800});
+    auto_ducking::ActivityDetector detector({0.02F, 0.01F, 100, 800});
     check(!detector.Update(0.03F, 0), "activation does not happen immediately");
     check(!detector.Update(0.03F, 99), "activation dwell is respected");
     check(detector.Update(0.03F, 100), "activation occurs after dwell");
@@ -30,4 +30,3 @@ int RunActivityDetectorTests() {
 
     return failures;
 }
-

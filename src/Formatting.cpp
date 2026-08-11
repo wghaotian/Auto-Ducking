@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace auto_mixer {
+namespace auto_ducking {
 
 std::wstring BaseName(const std::wstring_view path) {
     const auto separator = path.find_last_of(L"\\/");
@@ -33,5 +33,4 @@ std::wstring Truncate(const std::wstring_view value, const std::size_t width) {
     return std::wstring(value.substr(0, width - 3)) + L"...";
 }
 
-} // namespace auto_mixer
-
+} // namespace auto_ducking

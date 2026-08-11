@@ -14,11 +14,11 @@
 
 int wmain(const int argc, wchar_t* argv[]) {
     if (argc < 2) {
-        std::wcerr << L"Usage: auto-mixer-process-meter PID [PID ...]\n";
+        std::wcerr << L"Usage: auto-ducking-process-meter PID [PID ...]\n";
         return 2;
     }
 
-    std::vector<std::unique_ptr<auto_mixer::ProcessLoopbackCapture>> captures;
+    std::vector<std::unique_ptr<auto_ducking::ProcessLoopbackCapture>> captures;
     for (int index = 1; index < argc; ++index) {
         wchar_t* end = nullptr;
         const unsigned long value = std::wcstoul(argv[index], &end, 10);
@@ -26,7 +26,7 @@ int wmain(const int argc, wchar_t* argv[]) {
             std::wcerr << L"Invalid PID: " << argv[index] << L"\n";
             return 2;
         }
-        captures.push_back(std::make_unique<auto_mixer::ProcessLoopbackCapture>(
+        captures.push_back(std::make_unique<auto_ducking::ProcessLoopbackCapture>(
             static_cast<std::uint32_t>(value)));
     }
 
@@ -53,4 +53,3 @@ int wmain(const int argc, wchar_t* argv[]) {
     }
     return 0;
 }
-

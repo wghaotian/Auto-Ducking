@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace auto_mixer {
+namespace auto_ducking {
 
 enum class SessionState {
     Inactive,
@@ -64,4 +64,4 @@ private:
 
 const wchar_t* ToString(SessionState state) noexcept;
 
-} // namespace auto_mixer
+} // namespace auto_ducking

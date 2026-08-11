@@ -6,10 +6,10 @@
 #include <sstream>
 #include <vector>
 
-namespace auto_mixer {
+namespace auto_ducking {
 namespace {
 
-constexpr wchar_t kWaveformClass[] = L"AutoMixerWaveformControl";
+constexpr wchar_t kWaveformClass[] = L"AutoDuckingWaveformControl";
 
 } // namespace
 
@@ -183,4 +183,4 @@ void WaveformControl::Paint() {
     EndPaint(window_, &paint);
 }
 
-} // namespace auto_mixer
+} // namespace auto_ducking

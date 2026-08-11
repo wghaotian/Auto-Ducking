@@ -23,7 +23,7 @@
 
 ## Diagnostic CLI acceptance tests
 
-For each scenario, start `auto-mixer-diagnostics.exe`, confirm the expected executable and PID are shown, then play/silence audio and verify that only the relevant session's `PEAK` and bar respond.
+For each scenario, start `auto-ducking-diagnostics.exe`, confirm the expected executable and PID are shown, then play/silence audio and verify that only the relevant session's `PEAK` and bar respond.
 
 - [ ] Discord + Spotify: both sessions appear; Discord speech and Spotify music have independent meters.
 - [ ] Discord + YouTube in Chrome: Discord and one or more Chrome sessions appear independently.
@@ -47,7 +47,7 @@ For each scenario, start `auto-mixer-diagnostics.exe`, confirm the expected exec
 When a check fails, run the following while the relevant applications are producing audio and attach the output:
 
 ```powershell
-.\build\Release\auto-mixer-diagnostics.exe --once
+.\build\Release\auto-ducking-diagnostics.exe --once
 ```
 
 Also note the Windows output device, whether per-application audio routing is enabled, and whether the application is installed from the Microsoft Store. Protected/system sessions may not expose a usable process path; the PID, session ID, and meter can still be available.
