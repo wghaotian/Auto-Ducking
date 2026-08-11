@@ -1,0 +1,9 @@
+D:/Workspace/Auto Mixer/build-verify/CMakeFiles/auto-mixer-process-meter.dir
+D:/Workspace/Auto Mixer/build-verify/CMakeFiles/auto_mixer_core.dir
+D:/Workspace/Auto Mixer/build-verify/CMakeFiles/auto_mixer_formatting.dir
+D:/Workspace/Auto Mixer/build-verify/CMakeFiles/auto-mixer-unit-tests.dir
+D:/Workspace/Auto Mixer/build-verify/CMakeFiles/auto-mixer-diagnostics.dir
+D:/Workspace/Auto Mixer/build-verify/CMakeFiles/auto-mixer-ui.dir
+D:/Workspace/Auto Mixer/build-verify/CMakeFiles/RUN_TESTS.dir
+D:/Workspace/Auto Mixer/build-verify/CMakeFiles/ALL_BUILD.dir
+D:/Workspace/Auto Mixer/build-verify/CMakeFiles/ZERO_CHECK.dir

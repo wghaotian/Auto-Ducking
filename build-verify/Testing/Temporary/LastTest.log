@@ -1,0 +1,19 @@
+Start testing: Aug 11 20:10 W. Europe Daylight Time
+----------------------------------------------------------
+1/1 Testing: unit_tests
+1/1 Test: unit_tests
+Command: "D:/Workspace/Auto Mixer/build-verify/Release/auto-mixer-unit-tests.exe"
+Directory: D:/Workspace/Auto Mixer/build-verify
+"unit_tests" start time: Aug 11 20:10 W. Europe Daylight Time
+Output:
+----------------------------------------------------------
+All unit tests passed.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"unit_tests" end time: Aug 11 20:10 W. Europe Daylight Time
+"unit_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Aug 11 20:10 W. Europe Daylight Time

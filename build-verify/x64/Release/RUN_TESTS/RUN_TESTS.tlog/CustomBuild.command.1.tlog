@@ -1,0 +1,10 @@
+^D:\WORKSPACE\AUTO MIXER\BUILD-VERIFY\CMAKEFILES\7C9F65DBCF252A7CBF2F00851CE29A00\RUN_TESTS_FORCE.RULE
+setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
